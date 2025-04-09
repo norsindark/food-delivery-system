@@ -1,0 +1,55 @@
+# Java
+*.class
+*.jar
+*.war
+*.iml
+*.log
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment & secrets
+.env
+*.env
+
+# Docker
+**/logs/
+docker-compose.override.yml
+
+# Redis & Kafka data (if mounted locally)
+redis-data/
+kafka-data/
+zookeeper-data/
+
+# Spring specific
+*.db
+*.h2.db
+
+# Ignore generated files
+build/
+
+# Ignore application config
+**/src/main/resources/application.yml
+**/src/main/resources/application.properties
