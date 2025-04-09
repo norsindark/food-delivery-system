@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe
+    ports:
+      - "1521:1521"
+      - "8080:8080"
+    environment:
+      ORACLE_PASSWORD: ${ORACLE_PASSWORD}
+      APP_USER: ${APP_USER}
+      APP_PASSWORD: ${APP_PASSWORD}
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+
+volumes:
+  oracle-data:
