@@ -1,0 +1,21 @@
+* text=auto
+
+# Text file types
+*.java text
+*.xml text
+*.yml text
+*.yaml text
+*.json text
+*.md text
+*.properties text
+*.gitignore text
+*.gitattributes text
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
