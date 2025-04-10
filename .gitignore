@@ -37,7 +37,7 @@ Thumbs.db
 **/logs/
 docker-compose.override.yml
 
-# Redis & Kafka data (if mounted locally)
+# Redis & Kafka data
 redis-data/
 kafka-data/
 zookeeper-data/
@@ -52,3 +52,6 @@ build/
 # Ignore application config
 **/src/main/resources/application.yml
 **/src/main/resources/application.properties
+
+**/src/test/**
+infra/**
