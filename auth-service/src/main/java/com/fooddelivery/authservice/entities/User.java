@@ -22,7 +22,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_user_email", columnList = "email", unique = true),
+        @Index(name = "idx_user_username", columnList = "username", unique = true)
+})
 public class User implements UserDetails, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
