@@ -8,11 +8,13 @@ import com.fooddelivery.authservice.repositories.UserRepository;
 import com.fooddelivery.authservice.services.interfaces.CookieService;
 import com.fooddelivery.authservice.services.interfaces.LoginService;
 import com.fooddelivery.authservice.services.interfaces.TokenService;
+import com.fooddelivery.authservice.services.interfaces.UserService;
 import com.fooddelivery.authservice.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +23,20 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authManager;
-    private final JwtUtil jwtUtil;
     private final TokenService tokenService;
     private final CookieService cookieService;
+    private final UserService userService;
 
     @Override
     public ApiResponse<?> login(LoginRequest request, HttpServletResponse httpServletResponse) {
-        User user = userRepository.findByEmailOrUsername(request.getIdentifier(), request.getIdentifier())
-                .orElseThrow(() -> new InvalidCredentialsException("Invalid login credentials!"));
-
+        User user = getUser(request.getIdentifier());
         validatePassword(request.getPassword(), user.getPassword());
         authenticateUser(request);
 
-        String accessToken = jwtUtil.generateAccessToken(request.getIdentifier(), user.getRole().getRoleName());
-        String refreshToken = jwtUtil.generateRefreshToken(request.getIdentifier());
+        String accessToken = tokenService.generateAccessToken(request.getIdentifier(), user.getRole().getRoleName());
+        String refreshToken = tokenService.generateRefreshToken(request.getIdentifier());
 
         tokenService.storeRefreshTokenToRedis(request.getIdentifier(), refreshToken);
         cookieService.setRefreshToken(httpServletResponse, refreshToken);
@@ -50,9 +49,14 @@ public class LoginServiceImpl implements LoginService {
                 .build();
     }
 
+    private User getUser(String identifier) {
+        return userService.findUserByUsernameOrEmail(identifier)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+    }
+
     private void validatePassword(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword))
-            throw new InvalidCredentialsException("Invalid login Credentials");
+            throw new InvalidCredentialsException("Invalid login credentials");
     }
 
     private void authenticateUser(LoginRequest request) {

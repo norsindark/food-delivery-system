@@ -2,6 +2,7 @@ package com.fooddelivery.authservice.utils;
 
 import com.fooddelivery.authservice.entities.Role;
 import com.fooddelivery.authservice.entities.User;
+import com.fooddelivery.authservice.enums.RoleName;
 import com.fooddelivery.authservice.repositories.RoleRepository;
 import com.fooddelivery.authservice.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +31,14 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         if (userRepository.findByEmailOrUsername("norsindark@gmail.com", "ntuan").isEmpty()) {
-            Role adminRole = roleRepository.findByRoleName("ADMIN").orElseThrow(
+            Role adminRole = roleRepository.findByRoleName(RoleName.ADMIN.toString()).orElseThrow(
                     () -> new RuntimeException("Role Admin not found!"));
             User admin = User.builder()
                     .email("norsindark@gmail.com")
                     .role(adminRole)
                     .fullName("Nguyen Tuan")
                     .username("ntuan")
-                    .password(encoder.encode("05022001"))
+                    .password(encoder.encode("123456"))
                     .providerId("local")
                     .build();
             userRepository.save(admin);
